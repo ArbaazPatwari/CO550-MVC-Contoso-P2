@@ -13,9 +13,9 @@ namespace ASP_MVC_Contoso.Controllers
 {
     public class StudentsController : Controller
     {
-        private readonly SchoolContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public StudentsController(SchoolContext context)
+        public StudentsController(ApplicationDbContext context)
         {
             _context = context;
         }
