@@ -1,4 +1,5 @@
-﻿
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ASP_MVC_Contoso.Models
 {
@@ -12,6 +13,7 @@ namespace ASP_MVC_Contoso.Models
         public int EnrollmentID { get; set; }
         public int CourseID { get; set; }
         public int StudentID { get; set; }
+        [DisplayFormat(NullDisplayText = "No grade")]
         public Grade? Grade { get; set; }
 
         // navigation properties

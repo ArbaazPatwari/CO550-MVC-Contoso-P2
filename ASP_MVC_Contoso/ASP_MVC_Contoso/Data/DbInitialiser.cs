@@ -1,6 +1,8 @@
-﻿using ASP_MVC_Contoso.Models;
-using System;
+﻿using System;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using ASP_MVC_Contoso.Models;
 
 namespace ASP_MVC_Contoso.Data
 {
@@ -13,6 +15,10 @@ namespace ASP_MVC_Contoso.Data
             AddStudents(context);
             AddCourses(context);
             AddEnrollments(context);
+            AddDepartments(context);
+            AddInstructors(context);
+            AddOfficeAssignments(context);
+            AddCourseAssignments(context);
         }
 
         private static void AddEnrollments(ApplicationDbContext context)
@@ -97,6 +103,148 @@ namespace ASP_MVC_Contoso.Data
             foreach (Student s in students)
             {
                 context.Students.Add(s);
+            }
+
+            context.SaveChanges();
+        }
+
+        public static void AddDepartments(ApplicationDbContext context)
+        {
+            // Look for any departments.
+            if (context.Departments.Any())
+            {
+                return;   // DB has been seeded
+            }
+
+            var departments = new Department[]
+            {
+                new Department { Name = "English",     Budget = 350000,
+                    StartDate = DateTime.Parse("2007-09-01"),
+                    InstructorID  = instructors.Single( i => i.LastName == "Abercrombie").ID },
+                new Department { Name = "Mathematics", Budget = 100000,
+                    StartDate = DateTime.Parse("2007-09-01"),
+                    InstructorID  = instructors.Single( i => i.LastName == "Fakhouri").ID },
+                new Department { Name = "Engineering", Budget = 350000,
+                    StartDate = DateTime.Parse("2007-09-01"),
+                    InstructorID  = instructors.Single( i => i.LastName == "Harui").ID },
+                new Department { Name = "Economics",   Budget = 100000,
+                    StartDate = DateTime.Parse("2007-09-01"),
+                    InstructorID  = instructors.Single( i => i.LastName == "Kapoor").ID }
+            };
+
+            foreach (Department d in departments)
+            {
+                context.Departments.Add(d);
+            }
+            context.SaveChanges();
+        }
+
+        public static void AddInstructors(ApplicationDbContext context)
+        {
+            // Look for any instructors.
+            if (context.Instructors.Any())
+            {
+                return;   // DB has been seeded
+            }
+
+            var instructors = new Instructor[]
+            {
+                new Instructor { FirstName = "Kim",     LastName = "Abercrombie",
+                    HireDate = DateTime.Parse("1995-03-11") },
+                new Instructor { FirstName = "Fadi",    LastName = "Fakhouri",
+                    HireDate = DateTime.Parse("2002-07-06") },
+                new Instructor { FirstName = "Roger",   LastName = "Harui",
+                    HireDate = DateTime.Parse("1998-07-01") },
+                new Instructor { FirstName = "Candace", LastName = "Kapoor",
+                    HireDate = DateTime.Parse("2001-01-15") },
+                new Instructor { FirstName = "Roger",   LastName = "Zheng",
+                    HireDate = DateTime.Parse("2004-02-12") }
+            };
+
+            foreach (Instructor i in instructors)
+            {
+                context.Instructors.Add(i);
+            }
+
+            context.SaveChanges();
+        }
+
+        public static void AddOfficeAssignments(ApplicationDbContext context)
+        {
+            // Look for any Office Assignments.
+            if (context.OfficeAssignments.Any())
+            {
+                return;   // DB has been seeded
+            }
+
+            var officeAssignments = new OfficeAssignment[]
+            {
+                new OfficeAssignment {
+                    InstructorID = instructors.Single( i => i.LastName == "Fakhouri").ID,
+                    Location = "Smith 17" },
+                new OfficeAssignment {
+                    InstructorID = instructors.Single( i => i.LastName == "Harui").ID,
+                    Location = "Gowan 27" },
+                new OfficeAssignment {
+                    InstructorID = instructors.Single( i => i.LastName == "Kapoor").ID,
+                    Location = "Thompson 304" },
+            };
+
+            foreach (OfficeAssignment o in officeAssignments)
+            {
+                context.OfficeAssignments.Add(o);
+            }
+
+            context.SaveChanges();
+        }
+
+        public static void AddCourseAssignments(ApplicationDbContext context)
+        {
+            // Look for any departments.
+            if (context.CourseAssignments.Any())
+            {
+                return;   // DB has been seeded
+            }
+
+            var courseInstructors = new CourseAssignment[]
+                {
+                new CourseAssignment {
+                    CourseID = courses.Single(c => c.Title == "Chemistry" ).CourseID,
+                    InstructorID = instructors.Single(i => i.LastName == "Kapoor").ID
+                    },
+                new CourseAssignment {
+                    CourseID = courses.Single(c => c.Title == "Chemistry" ).CourseID,
+                    InstructorID = instructors.Single(i => i.LastName == "Harui").ID
+                    },
+                new CourseAssignment {
+                    CourseID = courses.Single(c => c.Title == "Microeconomics" ).CourseID,
+                    InstructorID = instructors.Single(i => i.LastName == "Zheng").ID
+                    },
+                new CourseAssignment {
+                    CourseID = courses.Single(c => c.Title == "Macroeconomics" ).CourseID,
+                    InstructorID = instructors.Single(i => i.LastName == "Zheng").ID
+                    },
+                new CourseAssignment {
+                    CourseID = courses.Single(c => c.Title == "Calculus" ).CourseID,
+                    InstructorID = instructors.Single(i => i.LastName == "Fakhouri").ID
+                    },
+                new CourseAssignment {
+                    CourseID = courses.Single(c => c.Title == "Trigonometry" ).CourseID,
+                    InstructorID = instructors.Single(i => i.LastName == "Harui").ID
+                    },
+                new CourseAssignment {
+                    CourseID = courses.Single(c => c.Title == "Composition" ).CourseID,
+                    InstructorID = instructors.Single(i => i.LastName == "Abercrombie").ID
+                    },
+                new CourseAssignment {
+                    CourseID = courses.Single(c => c.Title == "Literature" ).CourseID,
+                    InstructorID = instructors.Single(i => i.LastName == "Abercrombie").ID
+                    },
+                };
+
+            foreach (CourseAssignment ci in courseInstructors)
+            {
+                context.CourseAssignments.Add(ci);
             }
 
             context.SaveChanges();
